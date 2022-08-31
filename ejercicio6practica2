@@ -1,0 +1,17 @@
+program ejercicio6practica6;
+type
+resto=0..1;
+procedure abinario (num:integer);
+begin
+	if(num<>0)then begin
+		abinario(num div 2);
+		writeln(num mod 2);
+		end;
+end;
+var
+	num:integer;
+begin
+	writeln('Ingrese el numero que desee pasar a binario ');
+	readln(num);
+	writeln('El numero ', num,' a binario  es ');abinario(num);
+end.
