@@ -73,6 +73,6 @@ begin
         mayor:= a^.dato.edad;
     end
     else if 
-end;
+end
 
     
