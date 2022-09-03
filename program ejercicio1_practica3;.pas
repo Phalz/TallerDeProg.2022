@@ -67,12 +67,52 @@ end;
 
 //punto III
 
-function edad(a:arbol;mayor:integer):arbol;
+procedure mayor(a:arbol;var mayor:integer);
 begin
-    if (a = nil) then begin
-        mayor:= a^.dato.edad;
-    end
-    else if 
-end
+    If (a^.dato.edad > mayor) then begin
+      mayor := a^.dato.edad;
+    end;
+    if (a <> nil) then begin
+      mayor(a^.hi);
+      mayor(a^.hd);
+    end;
+end;
 
-    
+//punto IV
+
+procedure aumentaredad(a:arbol);
+begin
+    a^.dato.edad:= a^.dato.edad + 1;
+    if (a <> nil) then begin
+        aumentaredad(a^.hi);
+        aumentaredad(a^.hd);
+    end;
+end;
+
+//punto V 
+function buscar(a: arbol;num:integer):boolean;
+begin
+    if (a^.dato.num = num) then begin buscar := true;
+    end
+    else buscar := false;
+    if (buscar <> True) then begin
+        buscar(a^.hi,num);
+        buscar(a^.hd,num);
+    end;
+end;
+
+//punto VI
+function nombre(a: arbol;nom:String):boolean;
+begin
+    if (a^.dato.nombre = nom) then begin
+        nombre:= true;     
+    end
+    else
+        nombre:=false;
+    if ( nombre <> True) then begin
+        nombre(a^.hi,nom);
+        nombre(a^.hd,nom);
+    end;
+end;
+
+//punto VII
