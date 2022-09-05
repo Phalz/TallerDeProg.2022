@@ -1,156 +1,145 @@
-program ejercicio_3_taller;
+program ejercicio3_practica1;
 const
-    dimf = 7;
+    dimf = 8;
 type
     rango = 1..dimf;
 
-    mayor = array [rango] of integer;
-
-    peliculas = record
-        codigo: integer;
-        genero: integer;
-        puntaje: integer;
+    pelicula = record;
+        code:integer;
+        genero:rango;
+        puntaje:real;
     end;
 
+    segundodato = record;
+        code:integer;
+        puntaje:real;
+    end;
     lista = ^nodo;
 
     nodo = record
-        dato: peliculas;
-        sig: lista;
+        dato:pelicula;
+        sig:lista;
     end;
 
-procedure inicializarvector(var v:mayor);
+    vec = array[rango] of lista;
+
+    pun = array [rango] of segundodato;
+
+procedure inicializarvector(var v:vec);
 var
     i:integer;
 begin
-    for i:=1  to dimf do begin
-        v[i]:=0;
-    end;
+  for i:=1 to dimf do begin
+    v[i].dato.code:=0;
+    v[i].dato.genero:=i;
+    v[i].dato.puntaje:=0;
+    v[i].sig:=nil;
 end;
 
-procedure leerpeli(var p:peliculas);
-begin   
-    writeln('-Ingrese el codigo de la pelicula: ');readln(p.codigo);
-    writeln('-Ingrese el genero de la pelicula: ');readln(p.genero);
-    writeln('-Ingrese el puntaje de la pelicula: ');readln(p.puntaje);
-    writeln('-Se registro todo nashe-');
-end;
-
-procedure armarnodo(var l:lista; peli:peliculas);
-var
-    nue:lista;
-    act,ant:lista;
+procedure leerpeli(var p:pelicula);
 begin
-    new(nue);
-    nue^.dato:=peli;
-    act:=l;
-    ant:=l;
-    while (act <> nil) and (peli.genero < act^.dato.genero) do begin
-        ant:=act;
-        act:=act^.sig;
-    end;
-    if (act = ant) then begin
-      l:=nue;
-    end
-    else 
-        ant^.sig := nue;
-    nue^.sig := act;
+    writeln('--Ingrese codigo, genero y puntaje--');
+    readln(p.code);
+    readln(p.genero);
+    readln(p.puntaje);
 end;
 
-procedure armarlista (var l:lista);
+procedure armarnodo(var l:lista;p:pelicula);
 var
-    p:peliculas;
+    aux:lista;
+begin
+    new(a);
+    aux^.dato:=p;
+    aux^.sig:=l;
+    l:=aux;
+end;
+
+procedure armandolista(var l:lista);
+var
+    p:pelicula;
 begin
     leerpeli(p);
-    while (p.codigo <> -1) do begin
+    if (p.code <> 0) then begin
         armarnodo(l,p);
-        leerpeli(p);
+        armandolista(l);
     end;
 end;
 
-{parte 2}
-
-procedure leerlista (l:lista; var v:vector);
+procedure organizarenvector(var v:vec;var l:lista);
 var
-    aux:lista;
-    mayor,codemayor,i: integer;
+    i:integer;
 begin
-    aux:=l;
-    ant:=l;
     for i:=1 to dimf do begin
-        mayor:= -1;
-        codemayor:= 0;
-        while (aux <> nil) and (aux <> i) do begin
-        aux:=aux^.sig;
+        while (l <> nil) and (l^.dato.genero = i); 
+            armandolista(l);
         end;
-        while (aux <> nil)  and (aux = i ) do begin
-            if (aux^.dato.puntaje > mayor) then begin
-                mayor := aux^.dato.puntaje;
-                codemayor:=  aux^.dato.coigo;
-            aux:= aux^.sig
-        end;
-        end;
-        v[i]:= codemayor;
     end;
 end;
 
-{parte 3}
-
-procedure ordenar(var v:vector);
-var 
-    i,j,p:dimf;
-    item:integer;
+procedure maximo(var pmax:real;var cmax:integer;code:integer;puntaje1:real);
 begin
-    for i:=1 to dimf-1 do begin
-        p:=i;
-        for j:= i+1 to dimf do
-          if v[j] < v[p] then p:=j;
-        item := v[p];
-        v[p]:=v[i];
-        v[i]:=item;
+    if (puntaje > pmax) then begin
+        pmax := puntaje1;
+        cmax:= code;
     end;
 end;
 
-{parte 4}
-
-procedure leervector (v:vector;l:lista);
+procedure recorrolista(v:vec;var p:pun);
 var
-    mayor,menor,codemayor,codemenor,i:integer;
+    i,cmax:integer;
     aux:lista;
+    pmax:real;
 begin
-    mayor:= -1;
-    menor:= 9999;
-    codemayor:=0;
-    codemenor:=0;
-    aux:=l;
     for i:=1 to dimf do begin
-        while (aux <> nil) and (aux^.dato.codigo <> v[i]) do begin
-          aux:=aux^.sig
+        aux:= v[i];
+        cmax:=0;
+        pmax:=0;
+        while (aux <> nil) do begin
+            maximo(pmax,cmax,aux^.dato.code;aux^.dato.puntaje);
+            aux:=aux.sig;
         end;
-        if (aux^.dato.puntaje > mayor) then begin
-            menor:= mayor;
-            codemenor := codemayor;
-            codemayor := aux^.dato.codigo;
-            mayor:= aux^.dato.puntaje;
-        end
-        else
-            if (aux^.dato.puntaje < menor) then begin
-              menor:= aux^.dato.puntaje;
-              codemenor:= aux^.dato.codigo;
-            end;
+        p[i].code:=cmax;
+        p[i].puntaje:pmax;
     end;
-    writeln('la pelicula con mayor puntaje fue: ', codemayor, 'y la pelicula con menor puntaje fue: ', codemenor);
+end;
+
+procedure insercion(var p:pun;dimf:rango);
+var
+    i,j:integer;
+    item:pelicula;
+begin
+    for i:=1 to diml do begin
+        actual:=p[i];
+        j:=i-1;
+        while (j > 0) and (v[j].puntaje > item.puntaje) do begin
+            v[j+1]:=v[j];
+            j:=j-1;
+        end;
+        v[j-1]:=item;
+    end;
+end;
+
+procedure imprimir(p:pun);
+begin
+    writeln('la pelicula con mayor puntaje fue: ');readln(p[1]);
+    writeln('la pelicula con menor puntaje fue: ');readln(p[dimf]);
 end;
 
 var
+    p:pun;
+    v:vec;
     l:lista;
-    v:vector;
 begin
     l:=nil;
     inicializarvector(v);
-    armarlista(l);
-    leerlista(l,v);
-    ordenar(v);
-    leervector(v,l);
-end.
+    organizarenvector(v,l);
+    recorrolista(v,p);
+    insercion(p);
+    imprimir(p);
+
+
+    
+
+        
+    
 
