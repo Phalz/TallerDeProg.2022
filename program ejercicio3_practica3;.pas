@@ -47,11 +47,11 @@ end;
 procedure imprimir(a:arbol;valorinf: integer);
 begin
   if (a <> nil) then begin
+    imprimir(a^.hi,valorinf);
     if (a^.dato.legajo < valorinf) then begin
         writeln(a^.dato.dni);
         writeln(a^.dato.ano);
     end;
-    imprimir(a^.hi,valorinf);
     imprimir(a^.hd,valorinf);
   end;
 end;
@@ -64,15 +64,19 @@ begin
     end;
     if (a <> nil) then begin
         entredos(a^.hi,max,min);
+        if(a^.dato.legajo >= min) and (a^.dato.legajo <= min) then begin
+            writeln(a^.dato.dni);
+            writeln(a^.dato.ano);
+        end;
         entredos(a^.hd,max,min);
     end;
 end;
 
 procedure dnigrande(a:arbol;var d:integer);
 begin
-  if (a^.dni > d) then d:=a^.dato.dni;
   if (a <> nil) then begin
     dnigrande(a^.hd,d);
+    if (a^.dni > d) then d:=a^.dato.dni;
     dnigrande(a^.hi,d);
   end;
 end;
@@ -86,9 +90,9 @@ procedure impar(a:arbol;var total:integer);
         else sacarimp:=false;
     end;
 begin
-    if (sacarimp(a^.dato.legajo)) then total := total+1;
     if (a <> nil) then begin
         impar(a^.hd,total);
+        if (sacarimp(a^.dato.legajo)) then total := total+1;
         impar(a^.hi,total);
   end;
 end;
