@@ -1,4 +1,4 @@
-program ejercicio3practica2;
+program ejercicio3practica2FABRRI;
 type
 	lista=^nodo;
 	nodo=record
