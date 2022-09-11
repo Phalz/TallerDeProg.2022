@@ -67,9 +67,9 @@ begin
     else begin
         if (a^.dato.marca = marca) then 
             total:= total + 1;
-    end;
-    buscar_arbol(a^.hi,marca,total);
-    buscar_arbol(a^.hd,marca,total);
+    buscar_marca(a^.hi,marca,total);
+    buscar_marca(a^.hd,marca,total);
+	end;
 end;
 
 procedure inicializar_vec(var v:vector);
@@ -104,7 +104,7 @@ procedure armarnodo(var v:vector; a:arbol);
 
 begin
     if (a <> nil) then begin    
-        nodo_ordenado(v[a^.ano],a^.dato);
+        nodo_ordenado(v[a^.dato.ano],a^.dato);
         armarnodo(v,a);
     end;
 end;
@@ -114,8 +114,8 @@ begin
     if (a = nil) then
         writeln('el valor no se encuentra en el arbol')
     else begin
-        if (a^.patente = p) then 
-            writeln('ano: ',a^.dato.ano,)
+        if (a^.dato.patente = p) then 
+            writeln('ano: ',a^.dato.ano)
         else begin
             if (a^.dato.patente > p) then 
                 buscar_patente(a^.hi,p)
@@ -130,11 +130,14 @@ var
     a:arbol;
     marca:string;
     patente:integer;
+    total:integer;
 begin
+	total:=0;
     inicializar_vec(v);
     armar_arbol(a);
     writeln('--Ingrese una marca a buscar--');readln(marca);
-    buscar_marca(a,marca);
+    buscar_marca(a,marca,total);
+    writeln('Total de autos de esta marca: ',total);
     writeln('--Ingrese una patente a buscar--');readln(patente);
     buscar_patente(a,patente);
 end.
