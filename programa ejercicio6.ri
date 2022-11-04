@@ -1,0 +1,96 @@
+programa ejercicio6
+areas
+    cuadra1: AreaP(2,2,8,8)
+    cuadra2: AreaP(5,5,15,15)
+    cuadra3: AreaP (9,9,16,16)
+    ciudad: AreaC (1,1,100,100)
+procesos
+    proceso recorro1 (E c:numero)
+    comenzar
+        repetir 4
+            repetir c
+                mientras (HayFlorEnLaEsquina)
+                    tomarFlor
+                mover
+            mientras(HayFlorEnLaEsquina)
+                tomarFlor
+            derecha
+    fin
+    proceso deposito
+    comenzar
+        mientras ((HayFlorEnLaBolsa)&(PosCa < 100))
+            depositarFlor
+            depositarPapel
+            mover
+    fin
+robots
+    robot tipo1
+    variables
+        mov: numero
+        ave: numero
+        termine: boolean
+    comenzar
+        termine := F
+        RecibirMensaje(mov,jefe)
+        recorro1(mov)
+        termine := V
+        EnviarMensaje(termine,jefe)
+        RecibirMensaje(ave, jefe)
+        Pos(1,ave)
+        deposito
+    fin
+    robot boss
+    variables
+        n1,n2,n3: numero
+        termino: boolean
+    comenzar
+        EnviarMensaje(6,robot1)
+        EnviarMensaje(1,robot1)
+        EnviarMensaje(10,robot2)
+        EnviarMensaje(2,robot2)
+        EnviarMensaje(7,robot3)
+        EnviarMensaje(3,robot3)
+        RecibirMensaje(n1,*)
+        RecibirMensaje(n2,*)
+        RecibirMensaje(n3,*)
+        si (n1 = 1)
+            EnviarMensaje(20,robot1)
+        sino
+            si (n1 = 2)
+                EnviarMensaje(20,robot2)
+            sino
+                si (n1 = 3)
+                    EnviarMensaje(20,robot3)
+        EnviarMensaje(20,robot1)
+            sino
+                si (n1 = 2)
+                    EnviarMensaje(20,robot2)
+                    sino
+                        si (n1 = 3)
+                            EnviarMensaje(20,robot3)
+        EnviarMensaje(20,robot1)
+            sino
+                si (n1 = 2)
+                    EnviarMensaje(20,robot2)
+                    sino
+                        si (n1 = 3)
+                            EnviarMensaje(20,robot3)
+    fin
+variables
+    robot1: tipo1
+    robot2: tipo1
+    robot3: tipo1
+    jefe: boss
+comenzar
+    AsignarArea(robot1,cuadra1)
+    AsignarArea(robot1,ciudad)
+    AsignarArea(robot2,cuadra2)
+    AsignarArea(robot2,ciudad)
+    AsignarArea(robot3,cuadra3)
+    AsignarArea(robot3,ciudad)
+    AsignarArea(jefe,ciudad)
+    Iniciar(robot1,2,2)
+    Iniciar(robot2,5,5)
+    Iniciar(robot3,9,9)
+    Iniciar(jefe,100,100)
+fin
