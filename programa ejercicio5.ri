@@ -1,0 +1,88 @@
+programa ejercicio5
+procesos
+    proceso corredores (ES id:numero)
+    variables
+        x,y: numero
+        hay: boolean
+    comenzar
+        hay := V
+        mientras ((hay)|(PosCa < 100))
+            y := PosCa
+            x := PosAv
+            BloquearEsquina(11,11)
+            Pos(11,11)
+            si (HayFlorEnLaEsquina)
+                tomarFlor
+                Pos(x,y)
+                LiberarEsquina(11,11)
+                depositarFlor
+                mover
+            sino
+                hay := F
+            LiberarEsquina(11,11)
+        EnviarMensaje(id,jefe)
+        EnviarMensaje(y,jefe)
+    fin
+areas
+    carrera: AreaC(1,1,100,12)
+robots
+    robot tipo1
+    variables
+        id: numero
+    comenzar
+        RecibirMensaje(id,jefe)
+        corredores(id)
+    fin
+    robot boss
+    variables
+        idm,id1,id2,id3,id4: numero
+        ym,y1,y2,y3,y4: numero
+
+    comenzar
+        EnviarMensaje(1,r1)
+        EnviarMensaje(2,r2)
+        EnviarMensaje(3,r3)
+        EnviarMensaje(4,r4)
+        RecibirMensaje(id1,*)
+        RecibirMensaje(y1,*)
+        RecibirMensaje(id2,*)
+        RecibirMensaje(y2,*)
+        RecibirMensaje(id3,*)
+        RecibirMensaje(y3,*)
+        RecibirMensaje(id4,*)
+        RecibirMensaje(y4,*)
+        si (y1 > y2)
+            ym := y1
+            idm := id1
+        sino
+            si (ym < y3)
+                ym := y3
+                idm := id3
+            sino
+            si (ym < y4)
+                ym := y4
+                idm := id4
+            sino 
+                ym:=y2
+                idm := id2
+        Informar(idm)
+        Informar(ym)        
+    fin
+variables
+    r1: tipo1
+    r2: tipo1
+    r3: tipo1
+    r4: tipo1
+    jefe: boss
+comenzar
+    AsignarArea(r1,carrera)
+    AsignarArea(r2,carrera)
+    AsignarArea(r3,carrera)
+    AsignarArea(r4,carrera)
+    AsignarArea(jefe,carrera)
+    Iniciar(r1,1,4)
+    Iniciar(r2,1,6)
+    Iniciar(r3,1,8)
+    Iniciar(r4,1,10)
+    Iniciar(jefe,1,1)
+fin
