@@ -1,96 +1,65 @@
-programa ejercicio6
-areas
-    cuadra1: AreaP(2,2,8,8)
-    cuadra2: AreaP(5,5,15,15)
-    cuadra3: AreaP (9,9,16,16)
-    ciudad: AreaC (1,1,100,100)
+programa sincronizacion
 procesos
-    proceso recorro1 (E c:numero)
-    comenzar
-        repetir 4
-            repetir c
-                mientras (HayFlorEnLaEsquina)
-                    tomarFlor
-                mover
-            mientras(HayFlorEnLaEsquina)
-                tomarFlor
-            derecha
-    fin
-    proceso deposito
-    comenzar
-        mientras ((HayFlorEnLaBolsa)&(PosCa < 100))
-            depositarFlor
-            depositarPapel
-            mover
-    fin
-robots
-    robot tipo1
-    variables
-        mov: numero
-        ave: numero
-        termine: boolean
-    comenzar
-        termine := F
-        RecibirMensaje(mov,jefe)
-        recorro1(mov)
-        termine := V
-        EnviarMensaje(termine,jefe)
-        RecibirMensaje(ave, jefe)
-        Pos(1,ave)
-        deposito
-    fin
-    robot boss
-    variables
-        n1,n2,n3: numero
-        termino: boolean
-    comenzar
-        EnviarMensaje(6,robot1)
-        EnviarMensaje(1,robot1)
-        EnviarMensaje(10,robot2)
-        EnviarMensaje(2,robot2)
-        EnviarMensaje(7,robot3)
-        EnviarMensaje(3,robot3)
-        RecibirMensaje(n1,*)
-        RecibirMensaje(n2,*)
-        RecibirMensaje(n3,*)
-        si (n1 = 1)
-            EnviarMensaje(20,robot1)
+  proceso etapa(E id:numero)
+  variables
+    pasos: numero
+    v1,v2:boolean
+  comenzar
+    pasos := 0
+    repetir 19
+      v1 := F
+      v2 := F
+      mientras (pasos < 5)
+        mover
+        pasos := pasos + 1
+      si (id = 1)
+        EnviarMensaje(V,robot2)
+        EnviarMensaje(V,robot3)
+        RecibirMensaje(v1,robot2)
+        RecibirMensaje(v2,robot3)
+      sino
+        si (id = 2)
+          EnviarMensaje(V,robot1)
+          EnviarMensaje(V,robot3)
+          RecibirMensaje(v1,robot1)
+          RecibirMensaje(v2,robot3)
         sino
-            si (n1 = 2)
-                EnviarMensaje(20,robot2)
-            sino
-                si (n1 = 3)
-                    EnviarMensaje(20,robot3)
-        EnviarMensaje(20,robot1)
-            sino
-                si (n1 = 2)
-                    EnviarMensaje(20,robot2)
-                    sino
-                        si (n1 = 3)
-                            EnviarMensaje(20,robot3)
-        EnviarMensaje(20,robot1)
-            sino
-                si (n1 = 2)
-                    EnviarMensaje(20,robot2)
-                    sino
-                        si (n1 = 3)
-                            EnviarMensaje(20,robot3)
-    fin
+          EnviarMensaje(V,robot1)
+          EnviarMensaje(V,robot2)
+          RecibirMensaje(v1,robot1)
+          RecibirMensaje(v2,robot2)
+      si ((v1)&(v2))
+        pasos := 0
+  fin  
+areas
+  recorrido: AreaP(1,1,5,100)
+  bb: AreaP(100,100,100,100)
+robots
+  robot recorre
+  variables
+    id:numero
+  comenzar
+    RecibirMensaje(id,jefe)
+    etapa(id)
+  fin
+  robot jefesote
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+  fin
 variables
-    robot1: tipo1
-    robot2: tipo1
-    robot3: tipo1
-    jefe: boss
+  robot1: recorre
+  robot2: recorre
+  robot3: recorre
+  jefe: jefesote
 comenzar
-    AsignarArea(robot1,cuadra1)
-    AsignarArea(robot1,ciudad)
-    AsignarArea(robot2,cuadra2)
-    AsignarArea(robot2,ciudad)
-    AsignarArea(robot3,cuadra3)
-    AsignarArea(robot3,ciudad)
-    AsignarArea(jefe,ciudad)
-    Iniciar(robot1,2,2)
-    Iniciar(robot2,5,5)
-    Iniciar(robot3,9,9)
-    Iniciar(jefe,100,100)
+  AsignarArea(robot1,recorrido)
+  AsignarArea(robot2,recorrido)
+  AsignarArea(robot3,recorrido)
+  AsignarArea(jefe,bb)
+  Iniciar(jefe,100,100)
+  Iniciar(robot3,5,1)
+  Iniciar(robot2,3,1)
+  Iniciar(robot1,1,1)
 fin
