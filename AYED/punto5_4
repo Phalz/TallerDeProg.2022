@@ -1,0 +1,49 @@
+package tp06.ejercicio3;
+
+import tp02.ejercicio2.*;
+
+public class Mapa {
+	Grafo<String> grafo;
+	
+	public ListaGenerica<String> caminosincargar(String c1,String c2,int tanque){
+		ListaGenerica<String> camino = new ListaEnlazadaGenerica<String>();
+		if (!this.grafo.esVacio()) {
+			ListaGenerica<Vertice<String>> vertices = this.grafo.listaDeVertices();
+			//int pos = buscar(vertices,c1);
+			int pos = 0;
+			boolean[] marca = new boolean[vertices.tamanio()];
+			dfs(marca,c2,pos,tanque,camino);
+		}
+		return camino;
+	}
+	
+	private boolean dfs(boolean[] marca, String c2,int pos,int tanque,ListaGenerica<String> camino) {
+		marca[pos] = true;
+		boolean encontre = false;
+		Vertice<String> v= this.grafo.vetice(pos);
+		camino.agregarFinal(v.dato());
+		if (v.dato().equals(c2)) {
+			encontre= true;
+		}
+		else {
+			ListaGenerica<Arista<String>> adys = grafo.listaDeAdyacentes(v);
+			adys.comenzar();
+			boolean cumple = true;
+			while (cumple && !encontre && adys.fin()) {
+				Arista<String> a = adys.proximo();
+				int viaje = tanque  - a.peso();
+				if (viaje >= 0) {
+					int i = a.verticeDestino().getPosicion();
+					if (!marca[i]) {
+						encontre = dfs(marca,c2,i,viaje,camino);
+					}
+				}
+				else cumple = false;
+			}
+		}
+		if (!encontre) {
+			camino.eliminarEn(camino.tamanio());
+		}
+		return encontre;
+	}
+}
