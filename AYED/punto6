@@ -1,0 +1,98 @@
+/*
+Ejercicio 6
+Se quiere realizar un paseo en bicicleta por lugares emblemáticos de Oslo. Para esto se cuenta con un grafo de
+bicisendas. Partiendo desde el “Ayuntamiento” hasta un lugar destino en menos de X minutos, sin pasar por
+un conjunto de lugares que están restringidos.
+Escriba una clase llamada VisitaOslo e implemente su método:
+ListaGenerica<String> paseoEnBici(Grafo<String> lugares, String destino, int maxTiempo,
+ListaGenerica<String> lugaresRestringidos)
+En este ejemplo, para llegar desde Ayuntamiento a Museo Vikingo, sin pasar por: {“Akker Brigge”, “Palacio
+Real”} y en no más de 120 minutos, el camino marcado en negrita cumple las condiciones.
+Notas:
+ El “Ayuntamiento” debe ser buscado antes de comenzar el recorrido para encontrar un camino.
+ De no existir camino posible, se debe retornar una lista vacía.
+ Debe retornar el primer camino que encuentre que cumple las restricciones.
+ Ejemplos de posibles caminos a retornar, sin pasar por “Akker Brigge” y “Palacio Real” en no más de
+120 min (maxTiempo)
+ Ayuntamiento, El Tigre, Museo Munch, Parque Botánico, Galería Nacional, Parque Vigeland,
+FolkMuseum, Museo Fram, Museo del Barco Polar, Museo Vikingo. El recorrido se hace en
+91 minutos.
+ Ayuntamiento, Parque Botánico, Galería Nacional, Parque Vigeland, FolkMuseum, Museo
+Fram, Museo del Barco Polar, Museo Vikingo. El recorrido se hace en 70 minutos.
+ */
+
+package tp06.ejercicio3;
+import tp02.ejercicio2.*;
+
+public class Mapa {
+	
+	
+	public ListaGenerica<String> paseoEnBici(Grafo<String> lugares, String destino, int maxTiempo,ListaGenerica<String> lugaresRestringidos){
+		ListaGenerica<String> camino = new ListaEnlazadaGenerica<String>();
+		if (!lugares.esVacio()) {
+			ListaGenerica<Vertice<String>> vertices = lugares.listaDeVertices();
+			boolean[] marca = new boolean[vertices.tamanio()+1];
+			prohibidos(marca,lugaresRestringidos,vertices);
+			vertices.comenzar();
+			int pos_ayuntamiento = buscar(vertices);
+      int min = 0;
+			dfs(lugares,camino,pos_ayuntamiento,maxTiempo,min,destino,marca);
+		}
+		return camino;
+	}
+	
+	private int buscar(ListaGenerica<Vertice<String>> vertices) {
+		vertices.comenzar();
+		int i = 0;
+		while (!vertices.fin() && vertices.elemento(i).dato() != "Ayuntamiento") {
+			i++;
+			vertices.proximo();
+		}
+		return i;
+	}
+	
+	private boolean[] prohibidos(boolean[] marca,ListaGenerica<String> rest,ListaGenerica<Vertice<String>> v) {
+		rest.comenzar();
+		v.comenzar();
+		while (!rest.fin()) {
+			int i = 0;
+			while (v.elemento(i).dato() != rest.proximo()) {
+					i++;
+			}
+			marca[i] = true;
+		}
+		return marca;
+	}
+	
+	private boolean dfs(Grafo<String> lugares,ListaGenerica String> camino, int pos, int max, int min, String destino, boolean[] marca) {
+    encontre = false;
+    marca[pos] = true;
+		Vertice<String> v = lugares.elemento(pos);
+    camino.agregarFinal(v.getDato());
+		if (v.getDato() == destino){
+      if (km <= max){
+        return true
+      }
+    }
+    else{
+      ListaGenerica<Arista<String>> adys = lugares.listaDeAdyacentes(v);
+      adys.comenzar();
+      while (!encontre && adys.fin() && (min < max)){
+      	Arista<String> a =adys.proximo();
+        if ( min + a.peso() <= max){
+          min += a.peso();
+          int i = a.verticeDestino().posicion();
+          if (!marca[i]){
+            encontre = dfs(lugares,camino,i,max,min,destino,marca);
+          }
+        }
+      }
+      if (!encontre){
+        camino.eliminar(camino.tamanio());
+      }
+    }
+		return encontre	
+	}
+  
+  //anache
+}
